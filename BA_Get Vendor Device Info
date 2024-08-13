@@ -1,0 +1,37 @@
+@ECHO OFF
+::---------------------------Set Variables----------------------------------------------------------------::
+
+:: This sets a new of the parameteres and shortenes down the commands
+
+cls
+@pushd %~dp0
+:GetDeviceInfo
+
+
+
+
+:: Get Manufacturer
+FOR /F "tokens=2 delims==" %%A IN ('WMIC csproduct GET vendor /VALUE ^| FIND /I "vendor="') DO SET Vendor=%%A
+:: Recaculates if Vendor is OEM
+IF "%Vendor%" == "To Be Filled By O.E.M." (FOR /F "tokens=2 delims==" %%A  In ('wmic baseboard get Manufacturer /VALUE ^| FIND /I "Manufacturer="') do SET Vendor=%%A)
+Echo Vendor: %Vendor%
+
+:: Get Model
+FOR /F "tokens=2 delims==" %%A IN ('WMIC csproduct GET Name /VALUE ^| FIND /I "Name="') DO SET Model=%%A
+:: Recaculates if Model is OEM
+IF "%Model%" == "To Be Filled By O.E.M." (FOR /F "tokens=2 delims==" %%A  In ('wmic baseboard get Product /VALUE ^| FIND /I "Product="') do SET Model=%%A)
+Echo Model: %Model%
+
+::Get Serial Number
+for /f "tokens=2 delims==" %%J in ('wmic bios get serialnumber /value') do set Serial=%%J
+:: Recaculates if Serial is OEM
+IF "%Serial%" == "To Be Filled By O.E.M." (FOR /F "tokens=2 delims==" %%A  In ('wmic baseboard get SerialNumber /VALUE ^| FIND /I "SerialNumber="') do SET Serial=%%A)
+Echo Serial: %Serial%
+
+
+::Get Hostname
+FOR /F "usebackq" %%i IN (`hostname`) DO SET Hostname=%%i
+Pause
+
+
+@popd
