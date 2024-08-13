@@ -1,0 +1,13 @@
+
+@ echo off
+cls
+@pushd %~dp0
+:: Get private IP Address
+for /f "delims=[] tokens=2" %%a in ('ping -4 -n 1 %ComputerName% ^| findstr [') do set NetworkIP=%%a
+echo Network IP: %NetworkIP%
+
+:: Get Public IP Address
+for /f %%a in ('powershell Invoke-RestMethod api.ipify.org') do set PublicIP=%%a
+echo Public IP: %PublicIP%  
+@popd
+pause
